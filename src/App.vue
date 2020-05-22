@@ -1,12 +1,19 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Connexion</router-link> |
-      <router-link to="/Register">Inscriptions</router-link>
-    </div>
-    <router-view/>
+    <Auth ></Auth>
   </div>
 </template>
+
+<script>
+import Auth from "./components/Auth.vue"
+
+export default {
+  name: 'App',
+  components: {
+    Auth,
+  },
+}
+</script>
 
 <style lang="scss">
 #app {
@@ -14,19 +21,11 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #ffffff;
 }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+body{
+  margin: 0px;
+  background: #03405b
 }
 </style>
