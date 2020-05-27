@@ -1,139 +1,175 @@
 <template>
     <div>
-        <input 
-          type="text" 
-          class="search-bar" 
-          placeholder="Search..."
-          v-model="query"
-          @keypress="fetchWeather"
-        />
-        <div id='placementResults'>
-            <div id="placementFetch" v-if="weather.timezone" v-for="(jours, index) in weather.daily" :key="index">
-                <div>
-                    <img id='logoTemp' v-bind:src="'https://openweathermap.org/img/w/'+jours.weather[0].icon+'.png'">
-                    <p>{{Math.round(jours.temp.max)}}°C</p>
-                    <p> à  {{ infoLocation.name }}</p>
-                    
-                    </br>
-                </div>
+      <div class="container">
+          <div class="field">
+            <input 
+              type="text" 
+              id="fullname" 
+              placeholder="Cherchez votre ville..."
+              v-model="query"
+              @keypress="fetchWeather"/>
+              <!--<input type="text" name="fullname" id="fullname" placeholder="Full Name" autofill="autofill">-->
+              <label for="fullname">Cherchez votre ville...</label>
+          </div>
+      </div>
+
+      
+      
+      <div  v-if="weather.timezone" id='placementResults' >
+      <div v-if="error" class="alert alert-danger" v-html="error"></div>
+        <div id="CurrentDashboard" >
+          
+          <h2>Aujourd'hui dans la ville de </h2>
+          <h3>{{infoLocation.name}} ( {{infoLocation.sys.country}} )</h3>
+          <img id='logoTemp' v-bind:src="'https://openweathermap.org/img/wn/'+this.weather.current.weather[0].icon+'@2x.png'">
+          
+          <div id="CurrentDetails" >
+            <div id="Current" >
+              <h3>Température</h3>
+                <hr class="hr" style='width:90%'>
+                <ul>
+                    <li id="placementDetail"><p>Matin</p><span>{{Math.trunc(this.weather.daily[0].temp.morn)}}°C</span></li>
+                    <li id="placementDetail"><p>Journée</p><span>{{Math.trunc(this.weather.daily[0].temp.day)}}°C</span></li>
+                    <li id="placementDetail"><p>Soirée</p><span>{{Math.trunc(this.weather.daily[0].temp.eve)}}°C</span></li>
+                    <li id="placementDetail"><p>Nuit</p><span>{{Math.trunc(this.weather.daily[0].temp.night)}}°C</span></li>
+                </ul>
             </div>
             
-            <p v-else>
-                Inserer le nom d'une ville pour afficher la meteo
-            </p>
+            <div id="Spacement"></div>
+            
+            <div id="Details" >
+              <h3>Détails</h3>
+                <hr class="hr" style='width:90%'>
+                <ul>
+                    <li id="placementDetail"><p>Temps </p><span>{{this.weather.current.weather[0].description}}</span></li>
+                    <li id="placementDetail"><p>Humidité </p><span>{{this.weather.current.humidity}} %</span></li>
+                    <li id="placementDetail"><p>Vitesse du vent </p><span>{{this.weather.current.wind_speed}} Km/h</span></li>
+                    <li id="placementDetail"><p>Uv </p><span > {{Math.round(this.weather.current.uvi)}}</span></li>
+              </ul>
+            </div>
+
+          </div>
+
         </div>
+
+        <WeeksPrevision :PropsLatLon="LatLon" :PropsInfoLocation="infoLocation"></WeeksPrevision>
+        <HoursPrevision :PropsQuery="query" ></HoursPrevision>
+   
+      </div>
+     
+         
     </div>
 </template>
 
 <script>
 import axios from 'axios'
 import {apiKey , BaseUrl} from '../Api.js'
-
-const getDays = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+import Vue from "vue"
+import WeeksPrevision from './WeeksPrevision.vue'
+import HoursPrevision from './HoursPrevision.vue'
 
 export default {
     name: "InfoMeteo",
+    components: {
+      WeeksPrevision,
+      HoursPrevision
+    },
     data() {
         return {
             query: "",
+            error: null,
             LatLon: {},
             infoLocation: {},
             weather: {},
-            DayName: ''
+            options: { weekday: 'short' },
+            optionsHourly: { hour: '2-digit'},
+            
         }
     },
     methods: {
         fetchWeather (e) {
             if (e.key == "Enter") {
-                axios.get(`${BaseUrl}weather?q=${this.query}&units=metric&appid=${apiKey}`).then(response => {
+              
+              this.error = null
+                axios.get(`${BaseUrl}weather?q=${this.query}&units=metric&lang=fr&appid=${apiKey}`).then(response => {
                     this.LatLon = response.data.coord 
                     this.infoLocation = response.data
-                    console.log("coordoner",this.LatLon.lat)
-                    console.log("infoLocation",this.infoLocation)
-                    axios.get(`${BaseUrl}onecall?lat=${this.LatLon.lat}&lon=${this.LatLon.lon}&units=metric&appid=${apiKey}`).then(response => {
+                    axios.get(`${BaseUrl}onecall?lat=${this.LatLon.lat}&lon=${this.LatLon.lon}&units=metric&lang=fr&appid=${apiKey}`).then(response => {
                         this.weather = response.data 
-                            console.log("final resultat",this.weather)
-                        // for (const day of this.weather.daily) {
-                        //     let getDay = new Date(day.dt*1000)
-                        //     this.DayName = getDays[getDay.getDay()]
-                        //     console.log("day",this.DayName);
-                        // }
                     })
-                })
+                    console.log('current',this.weather)
+                }).catch(error => {
+                  error.response.data.message = "Le nom de la ville n'a pas était trouvé"
+                  this.error =  error.response.data.message
+                });
+              // this.query = null
             }
         }
     },
-    // watch: {
-    //     weather: function(query, weather) {
-    //         console.log(this.query, this.weather)
-    //     }
-//   }
+    
 }
 
 </script>
 
 <style lang="css">
-.search-box {
-  width: 100%;
-  margin-bottom: 30px;
+.field {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+          flex-flow: column-reverse;
 }
-.search-box .search-bar {
-  display: block;
-  width: 100%;
-  padding: 15px;
-  
-  color: #313131;
-  font-size: 20px;
-  appearance: none;
-  border:none;
-  outline: none;
-  background: none;
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 0px 16px 0px 16px;
-  transition: 0.4s;
+label,
+input {
+  -webkit-transition: all 200ms ease;
+  transition: all 200ms ease;
 }
-.search-box .search-bar:focus {
-  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.25);
-  background-color: rgba(255, 255, 255, 0.75);
-  border-radius: 16px 0px 16px 0px;
+input {
+  font-size: 24px;
+  color: #ccc;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+  -webkit-appearance: none;
+  border-radius: 0;
+  padding: 5px 0;
+  background: transparent;
 }
-.location-box .location {
-  color: #FFF;
-  font-size: 32px;
-  font-weight: 500;
-  text-align: center;
-  text-shadow: 1px 3px rgba(0, 0, 0, 0.25);
+input:focus {
+  outline: 0;
+  border-color: coral;
 }
-.location-box .date {
-  color: #FFF;
-  font-size: 20px;
-  font-weight: 300;
-  font-style: italic;
-  text-align: center;
+input:placeholder-shown + label {
+  margin-left: -30px;
+  cursor: text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-transform-origin: left bottom;
+          transform-origin: left bottom;
+  -webkit-transform: translate(0, 2.125em) scale(1.5);
+          transform: translate(0, 2.125em) scale(1.5);
 }
-.weather-box {
-  text-align: center;
+input:not(:placeholder-shown) + label,
+input:focus + label {
+  -webkit-transform: translate(0, 0) scale(1);
+          transform: translate(0, 0) scale(1);
+  cursor: default;
+  color: coral;
 }
-.weather-box .temp {
-  display: inline-block;
-  padding: 10px 25px;
-  color: #FFF;
-  font-size: 102px;
-  font-weight: 900;
-  text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
-  background-color:rgba(255, 255, 255, 0.25);
-  border-radius: 16px;
-  margin: 30px 0px;
-  box-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+label {
+  max-width: 66%;;
+  color: #ccc;
 }
-.weather-box .weather {
-  color: #FFF;
-  font-size: 48px;
-  font-weight: 700;
-  font-style: italic;
-  text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+::-webkit-input-placeholder {
+  opacity: 0;
+  -webkit-transition: inherit;
+  transition: inherit;
 }
+.container{
+      width: 310px!important;
+    margin: auto!important;
+}
+
 #logoTemp{
     width: 50px;
     transform: rotate(0deg);
@@ -141,13 +177,240 @@ export default {
 }
 #placementResults{
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     flex-wrap: wrap;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 200px;
+    padding-right: 200px;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    margin-left: 0!important;
+    margin-right: 0!important
+}
+#Spacement{
+  width: 50px
+}
+
+@media screen and (max-width: 640px) {
+  #placementResults{
+    padding-left: 20px!important;
+    padding-right: 20px!important;
+  }
+  #DailyDashboard {
+    padding: 10px!important;
+  }
+  h2{
+    font-size: 1.1rem
+  }
+
+  #logoTemp{
+    width: 40px!important
+  }
+
+  #placementDays{
+    margin-bottom: 0!important
+  }
+  #placementHourly{
+        padding: 55px;
+  }
+
+  #CurrentDetails {
+    flex-wrap: wrap!important;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  #Spacement{
+    width: 10px!important
+  }
+    #fetchDay{
+    font-size: x-small!important;
+  }
+    #degreResize{
+    font-size: smaller!important
+  }
+  #placementDetail{
+    font-size: smaller!important;
+    width: 95%!important;
+  }
+}
+@media screen and (max-width: 820px) {
+  #placementDetail p span {
+        font-size: x-small!important;
+  }
+}
+
+
+@media screen and (max-width: 1608px) {
+  #CurrentDashboard{
+    padding: 35px!important;
+   }
+
+}
+
+@media screen and (min-width: 1700px){
+  #CurrentDetails{
+    flex-wrap: wrap
+  }
+}
+
+@media screen and (max-width: 1700px) {
+  #placementResults{
+    display: block
+  }
+    #CurrentDashboard{
+    padding: 35px!important;
+    margin-bottom: 35px!important
+  }
+  #CurrentDetails {
+    margin-top: 50px;
+    display: flex;
+    margin-left: 60px;
+    justify-content: space-evenly;
+    margin-right: 60px;
+    flex-wrap: unset;
+  }
+    #placementDetail{
+    width: 45%;
+    margin: 20px auto
+  }
+}
+
+
+@media screen and (max-width: 1350px) {
+
+    #placementDetail{
+    width: 85%;
+    margin: 20px auto
+  }
+}
+
+@media screen and (max-width: 1000px) {
+
+  #CurrentDetails {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  #fetchDetails{
+    font-size: x-small!important;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+
+#placementResults{
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+}
+
+#CurrentDetails{
+  margin-top: 50px;
+  display: flex;
+  
+}
+
+#Current{
+margin: auto;
+width: 100%
+}
+#Details{
+  margin: auto;
+  width: 100%
+}
+#fetchDay{
+  font-size: large
+}
+#fetchDetails{
+  font-size: large
 }
 #placementFetch {
-    padding: 50px;
-    
+  /*padding: 50px;*/
+  margin: auto
 }
+#prevision{
+  width: 100%;
+    margin-top: 75px;
+}
+#CurrentDashboard{
+  background: #27293d;
+  border-radius: 7px;
+  padding: 58px;
+}
+#DailyDashboard{
+  background: #27293d;
+  border-radius: 7px;
+  padding: 45px;
+}
+#HourlyDashboard{
+  background: #27293d;
+  border-radius: 7px;
+  margin-bottom: 100px;
+  margin: 55px auto;
+  padding: 45px;
+  width: 100%;
+}
+#dashboardContent{
+    padding-left: 10px;
+    margin-bottom: 25px;
+    margin-top: 30px;
+    padding-right: 7px;
+}
+#placementTemp{
+  display: flex;
+  width: 100%
+}
+#tempPlacement{
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+}
+#placementDetail{
+  text-align: start;
+  display: flex;
+  padding: 0px;
+  margin-bottom: 2rem;
+  align-items: center;
+  justify-content: space-between;
+
+}
+hr {
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+    color: white;
+    border: 0;
+    border-top: 1px solid white!important;
+}
+#placementDays{
+
+  display: flex;
+  width: 100%;
+  flex-flow: wrap;
+  justify-content: space-between;
+
+}
+li{
+  padding-left: 0!important
+}
+
+#alignResult{
+  text-align: center!important;
+}
+
+#placementDetailsWeeks{
+  display: flex;
+  justify-content: space-between
+}
+
+#placementHourly{
+  border-right: 1px solid white;
+}
+#titleHourly{
+  margin-bottom: 60px;
+  margin-top: 40px;
+}
+h3{
+  font-size: 1rem!important;
+}
+
+
 </style>

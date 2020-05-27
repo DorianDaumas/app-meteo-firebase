@@ -6,7 +6,7 @@
       </ul>
     </nav>
     </br></br></br></br>
-    <div v-if="user.loggedIn" class="Navbar">
+    <div v-if="user.loggedIn" >
       <h1>BONJOUR {{user.data.displayName.toUpperCase()}} !</h1>
       <InfoMeteo></InfoMeteo>
     </div>
@@ -64,6 +64,7 @@ ul{
   list-style-type: none;
   margin: 0;
   padding: 0;
+  margin-bottom: 0!important
 }
 li{
   text-align: start;
@@ -71,16 +72,17 @@ li{
 
 }
 .logout{
-  width: 50px;
+  width: 30px;
   transform: rotate(180deg);
   cursor: pointer;
   display: flex;
 }
 nav{
   background-color: #161616;
+  padding: 6px;
 }
 img{
-  width: 100px;
+  width: 120px;
   transform: rotate(180deg);
   cursor: pointer
 }

@@ -1,8 +1,8 @@
 <template>
   <div class="hello">
     <div v-if="!user.loggedIn" id="nav">
-      <router-link to="/">Connexion</router-link> |
-      <router-link to="/Register">Inscriptions</router-link>  
+      <router-link class="link" to="/">Connexion</router-link> |
+      <router-link class="link" to="/Register">Inscriptions</router-link>  
     </div>
     <router-view/>
   </div>
@@ -35,6 +35,10 @@ export default {
 h3 {
   margin: 40px 0 0;
 }
+.link{
+  color: white;
+  font-size: large
+}
 ul {
   list-style-type: none;
   padding: 0;
@@ -45,5 +49,11 @@ li {
 }
 a {
   color: #42b983;
+}
+#nav{
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translate(-50%, -50%);
 }
 </style>

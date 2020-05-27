@@ -4,6 +4,17 @@ import './registerServiceWorker'
 import router from './router'
 import firebase from "firebase";
 import store from "./store";
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+import Trend from "vuetrend"
+import moment from 'moment'
+import VueCarousel from 'vue-carousel';
+import { BootstrapVue } from 'bootstrap-vue'
+
+
+Vue.use(BootstrapVue)
+Vue.use(VueCarousel);
+Vue.use(Trend)
 
 Vue.config.productionTip = false
 
@@ -26,9 +37,18 @@ firebase.auth().onAuthStateChanged(user => {
 });
 
 
-
-new Vue({
-  router,
-  store: store,
-  render: h => h(App)
-}).$mount('#app')
+let app = '';
+firebase.auth().onAuthStateChanged(user => {
+  if(!app){
+    app = new Vue({
+      router,
+      store,
+      render: h => h(App),
+    }).$mount('#app')
+  }
+});
+// new Vue({
+//   router,
+//   store: store,
+//   render: h => h(App)
+// }).$mount('#app')

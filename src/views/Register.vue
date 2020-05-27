@@ -1,6 +1,6 @@
 <template>
   <div class="register">
-    <h1>Register</h1>
+    <h1>Inscriptions</h1>
 
     <div v-if="error" class="alert alert-danger">{{error}}</div><br><br>
 
@@ -14,7 +14,7 @@
       <label for="mdp">Mots de passe:</label><br>
       <input required type="password" id="mdp" name="mdp" v-model="form.password"><br><br>
       
-      <input type="submit" value="Submit">
+      <input type="submit" value="S'inscrire">
     </form> 
 
   </div>
@@ -69,3 +69,11 @@ export default {
 }
 
 </script>
+<style>
+.register {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%)
+}
+</style>

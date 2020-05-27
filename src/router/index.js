@@ -28,30 +28,31 @@ Vue.use(VueRouter)
     path: '/Dashboard',
     name: 'Dashboard',
     component: Dashboard,
+    meta: {
+      requiresAuth: true
+   }
   },
 
 ]
 
 
-console.log('store',store.getters.user.loggedIn);
+console.log('store',store.getters.user);
 
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
-  
 })
 
+router.beforeEach((to, from, next) => {
+  const currentUser = firebase.auth().currentUser;
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  if (requiresAuth && !currentUser) next('/');
+  else if (!requiresAuth && currentUser) next('Dashboard');
+  else next();
+});
 
-// router.beforeEach((to, from, next) => {
-//   const isLogged = store.getters.user.loggedIn
-//     if (isLogged) next()
-//     else{
-//       if(to.meta.requiresVisitor) next()
-//       else next('/Dashboard')
-//     }
-// })
 
 export default router
  

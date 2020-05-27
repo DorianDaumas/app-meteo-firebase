@@ -23,9 +23,11 @@ export default {
   text-align: center;
   color: #ffffff;
 }
-
+p{
+  margin: 0!important
+}
 body{
   margin: 0px;
-  background: #03405b
+  background: #1e1e2f!important
 }
 </style>
