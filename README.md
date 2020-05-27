@@ -10,15 +10,7 @@ npm install
 ```
 npm run serve
 ```
+Projet pour tester le framework Vue.js 
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-=======
-# App-meteo-firebase
-Application Vue.js / firebase / vueX
->>>>>>> 188f3a336a54453d6eef240ce416becb48cd4303
+J'ai utilisé Vue.js / firebase / vueX et l'api OpenWeatherMap,
+pour créer un dashboard qui affiche les donnés météo du jours, de la semaine et toutes les 3 heures.
