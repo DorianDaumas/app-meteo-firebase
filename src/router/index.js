@@ -36,9 +36,6 @@ Vue.use(VueRouter)
 ]
 
 
-console.log('store',store.getters.user);
-
-
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,

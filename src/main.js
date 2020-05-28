@@ -32,8 +32,8 @@ let firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
-firebase.auth().onAuthStateChanged(user => {
-  store.dispatch("fetchUser", user);
+firebase.auth().onAuthStateChanged(user => {    
+    store.dispatch("fetchUser", user);
 });
 
 
@@ -47,8 +47,3 @@ firebase.auth().onAuthStateChanged(user => {
     }).$mount('#app')
   }
 });
-// new Vue({
-//   router,
-//   store: store,
-//   render: h => h(App)
-// }).$mount('#app')

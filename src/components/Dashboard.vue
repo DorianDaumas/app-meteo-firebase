@@ -7,7 +7,7 @@
     </nav>
     </br></br></br></br>
     <div v-if="user.loggedIn" >
-      <h1>BONJOUR {{user.data.displayName.toUpperCase()}} !</h1>
+      <h1>BONJOUR !</h1>
       <InfoMeteo></InfoMeteo>
     </div>
 
@@ -48,15 +48,9 @@ export default {
           });
         });
     },
-    redirect(){
-      this.$router.replace({
-            name: "Login"
-          });
-    }
   }
 }
 
-// console.log(this.$store)
 </script>
 
 <style>

@@ -21,8 +21,10 @@
 </template>
 
 <script>
-import firebase from "firebase";
-import Login from "./Login.vue"
+
+import firebase from "firebase"
+import Dashboard from "../components/Dashboard.vue"
+import store from "../store"
 
 export default {
   data() {
@@ -30,7 +32,8 @@ export default {
       form: {
         name: "",
         email: "",
-        password: ""
+        password: "",
+        sendName: ""
       },
       error: null
       }
@@ -46,9 +49,24 @@ export default {
               displayName: this.form.name
             })
             .then(() => {
-              this.$router.replace({ name: "Login" });
+              this.$router.replace({ name: "Dashboard" });
             });
         })
+        // .then(user => {
+        //   // user
+        //   //   .updateProfile({
+        //   //     displayName: this.form.name
+        //   //   })
+        //   //   console.log("displayName apres",this.form.name)
+            
+        //     // .then(() => {
+
+        //     // });
+        // })
+ 
+        // .then(() => {
+        //   this.$router.replace({ name: "Dashboard" });
+        // })
         .catch(err => {
             if(err.code === "auth/weak-password"){
               err.message = `Votre mot de passe doit contenir au moins 6 caractères.`
@@ -63,8 +81,10 @@ export default {
               this.error = err.message;
             }
             console.log(err)
-          });
+          })
+
     }
+
   },
 }
 

@@ -19,9 +19,9 @@
       </form> 
     </div>
 
-    <div v-else>
+    <!--<div v-else>
       {{pushToDashboard()}}
-    </div>
+    </div>-->
 
   </div>
 </template>
