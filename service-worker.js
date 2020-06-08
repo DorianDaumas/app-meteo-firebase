@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.806f266594ba0aae2886f1f0de2131db.js"
+  "/App-meteo-firebase/precache-manifest.3da84fe434dc742dc1acb4eee2c2b8ff.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "appmeteo"});
