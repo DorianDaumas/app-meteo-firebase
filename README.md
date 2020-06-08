@@ -10,4 +10,4 @@ netlify pour le deploiement via github
 
 Et l'api OpenWeatherMap pour créer un dashboard qui affiche les donnés météo détaillé du jours, de la semaine et toutes les 3 heures.
 
-pour tester l'app rendez-vous sur ce lien => <a href="https://distracted-bohr-6c222c.netlify.app/">Application</a>
+pour tester l'app rendez-vous sur ce lien => <a href="https://meteo-firebase.netlify.app/">Application</a>
