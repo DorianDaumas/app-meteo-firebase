@@ -54,6 +54,7 @@ a {
   position: absolute;
   left: 50%;
   top: 5%;
+  width: 100%;
   transform: translate(-50%, -50%);
 }
 </style>
