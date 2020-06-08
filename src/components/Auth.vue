@@ -53,7 +53,7 @@ a {
 #nav{
   position: absolute;
   left: 50%;
-  top: 20%;
+  top: 5%;
   transform: translate(-50%, -50%);
 }
 </style>
