@@ -11,12 +11,13 @@
               <!--<input type="text" name="fullname" id="fullname" placeholder="Full Name" autofill="autofill">-->
               <label for="fullname">Cherchez votre ville...</label>
           </div>
+          <div v-if="error" class="alert alert-danger" v-html="error"></div>
       </div>
 
       
       
       <div  v-if="weather.timezone" id='placementResults' >
-      <div v-if="error" class="alert alert-danger" v-html="error"></div>
+      
         <div id="CurrentDashboard" >
           
           <h2>Aujourd'hui dans la ville de </h2>
@@ -188,6 +189,9 @@ label {
 }
 #Spacement{
   width: 50px
+}
+.alert-danger{
+margin-top: 30px;
 }
 
 @media screen and (max-width: 640px) {
